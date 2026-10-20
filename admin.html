@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Administration – Lycée Torres</title>
+<style>
+:root{--bg:#f6f4fb;--card:#fff;--tx:#1e1838;--mu:#645b82;--g:#5b3fa0;--g2:#3a2578;--au:#b79bff;--bd:#e4def2;--er:#d6303a;--ok:#1f8f55;--wa:#b7791f}
+@media(prefers-color-scheme:dark){:root{--bg:#14102a;--card:#1d1738;--tx:#ece8f7;--mu:#b3a9d3;--bd:#312858;--g:#b79bff;--er:#ff6b72;--ok:#4fd18b;--wa:#f0b955}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:Arial,"Segoe UI",sans-serif;line-height:1.5;min-height:100vh}
+[hidden]{display:none!important}
+button,input,select,textarea{font:inherit;color:inherit}
+.top{background:var(--g2);color:#fff;padding:14px 4%;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:5}
+.top h1{font-size:1.1rem}.top span{opacity:.8;font-size:.9rem}
+.wrap{width:min(1200px,94%);margin:22px auto 60px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:22px}
+.login{max-width:400px;margin:12vh auto 0}
+.login h2{color:var(--g);margin-bottom:6px}.login p{color:var(--mu);margin-bottom:16px;font-size:.95rem}
+label{display:block;font-weight:700;font-size:.9rem;margin:12px 0 4px}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--bg)}
+textarea{min-height:90px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--au);outline-offset:1px}
+.btn{border:0;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer;background:var(--g2);color:#fff}
+.btn.sec{background:transparent;color:var(--g);border:1px solid var(--g)}
+.btn.dan{background:var(--er);color:#fff}
+.btn:disabled{opacity:.6;cursor:wait}
+.msg{margin-top:12px;font-weight:700;font-size:.92rem}.msg.err{color:var(--er)}.msg.ok{color:var(--ok)}
+.tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.tabs button{border:1px solid var(--g);background:transparent;color:var(--g);border-radius:10px;padding:8px 16px;font-weight:700;cursor:pointer}
+.tabs button.on{background:var(--g2);color:#fff;border-color:var(--g2)}
+.bar{display:grid;grid-template-columns:2fr 1fr 1fr auto auto;gap:10px;margin-bottom:12px;align-items:center}
+.cnt{color:var(--mu);font-size:.9rem;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{padding:10px 8px;text-align:start;border-bottom:1px solid var(--bd);vertical-align:top}
+th{color:var(--mu);font-size:.8rem;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap}
+tbody tr{cursor:pointer}tbody tr:hover{background:rgba(125,95,200,.08)}
+.pill{display:inline-block;padding:2px 10px;border-radius:99px;font-size:.78rem;font-weight:700;border:1px solid currentColor;white-space:nowrap}
+.s-nouveau{color:var(--wa)}.s-en_cours{color:var(--g)}.s-accepte,.s-traite{color:var(--ok)}.s-refuse{color:var(--er)}.s-lu{color:var(--mu)}
+dialog{border:1px solid var(--bd);border-radius:16px;background:var(--card);color:var(--tx);width:min(640px,94vw);max-height:90vh;padding:0;overflow:auto}
+dialog::backdrop{background:rgba(10,6,30,.6)}
+.dh{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--bd);position:sticky;top:0;background:var(--card)}
+.dh h3{color:var(--g)}.db{padding:16px 20px}
+.dl{display:grid;grid-template-columns:150px 1fr;gap:6px 14px;font-size:.93rem}.dl dt{color:var(--mu);font-weight:700}.dl dd{overflow-wrap:anywhere;white-space:pre-wrap}
+.da{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;justify-content:space-between}
+.empty{text-align:center;color:var(--mu);padding:30px}
+@media(max-width:760px){
+ .bar{grid-template-columns:1fr 1fr}.bar input{grid-column:1/-1}
+ table,thead,tbody,tr,td{display:block}thead{display:none}
+ tr{border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin-bottom:10px}
+ td{border:0;padding:3px 0;display:flex;gap:8px;justify-content:space-between}
+ td::before{content:attr(data-l);color:var(--mu);font-weight:700;font-size:.8rem}
+ .dl{grid-template-columns:1fr}.dl dt{margin-top:8px}
+}
+</style>
+</head>
+<body>
+<div class="top"><h1>Administration – Lycée Abdelkhalek Torres</h1><span id="who"></span><button class="btn sec" id="out" hidden style="color:#fff;border-color:#fff">Se déconnecter</button></div>
+
+<div class="wrap">
+  <!-- Connexion -->
+  <form class="card login" id="lf" autocomplete="on">
+    <h2>Connexion</h2><p>Accès réservé à l'administration du lycée.</p>
+    <label for="em">E-mail</label><input id="em" type="email" autocomplete="username" required>
+    <label for="pw">Mot de passe</label><input id="pw" type="password" autocomplete="current-password" required>
+    <div style="margin-top:16px"><button class="btn" id="lb" type="submit">Se connecter</button></div>
+    <p class="msg err" id="lm" role="alert" hidden></p>
+  </form>
+
+  <!-- Tableau de bord -->
+  <div id="app" hidden>
+    <div class="tabs" role="tablist">
+      <button class="on" data-t="inscriptions">Inscriptions</button>
+      <button data-t="contact_messages">Messages</button>
+    </div>
+    <div class="card">
+      <div class="bar">
+        <input id="q" type="search" placeholder="Rechercher (nom, Massar, téléphone, e-mail…)" aria-label="Rechercher">
+        <select id="fs" aria-label="Filtrer par statut"></select>
+        <select id="fl" aria-label="Filtrer par niveau"><option value="">Tous les niveaux</option><option>TC</option><option>1 BAC</option><option>2 BAC</option></select>
+        <button class="btn sec" id="rf" type="button">Actualiser</button>
+        <button class="btn" id="ex" type="button">Exporter Excel</button>
+      </div>
+      <div class="cnt" id="cnt"></div>
+      <p class="msg err" id="am" role="alert" hidden></p>
+      <div style="overflow-x:auto"><table><thead id="th"></thead><tbody id="tb"></tbody></table></div>
+      <div class="empty" id="em0" hidden>Aucun enregistrement.</div>
+    </div>
+  </div>
+</div>
+
+<dialog id="dlg" aria-labelledby="dt">
+  <div class="dh"><h3 id="dt"></h3><button class="btn sec" id="dx" type="button" aria-label="Fermer">✕</button></div>
+  <div class="db">
+    <dl class="dl" id="dd"></dl>
+    <label for="dst">Statut</label><select id="dst"></select>
+    <div id="nw"><label for="dnote">Notes internes</label><textarea id="dnote" maxlength="2000"></textarea></div>
+    <p class="msg" id="dm" role="status"></p>
+    <div class="da"><button class="btn dan" id="dd2" type="button">Supprimer</button><button class="btn" id="ds" type="button">Enregistrer</button></div>
+  </div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const SB_URL="https://ofbskzmuupynzmudhoid.supabase.co",SB_KEY="sb_publishable_a1SxavhXUnScDhp7QXxYVw_X6AWO1VQ";
+const $=id=>document.getElementById(id);
+const sb=window.supabase.createClient(SB_URL,SB_KEY);
+
+const ST={inscriptions:{nouveau:"Nouveau",en_cours:"En cours",accepte:"Accepté",refuse:"Refusé"},contact_messages:{nouveau:"Nouveau",lu:"Lu",traite:"Traité"}};
+const CFG={
+ inscriptions:{title:"Demande d'inscription",
+  cols:[["created_at","Date"],["full_name","Élève"],["massar_code","Massar"],["level","Niveau"],["track","Filière"],["phone","Téléphone"],["status","Statut"]],
+  all:[["created_at","Date"],["school_year","Année scolaire"],["full_name","Nom et prénom"],["massar_code","Code Massar"],["birth_date","Date de naissance"],["sex","Sexe"],["level","Niveau"],["track","Filière"],["previous_school","Établissement d'origine"],["previous_school_directorate","Direction"],["previous_school_district","Arrondissement"],["guardian_name","Tuteur"],["phone","Téléphone"],["email","E-mail"],["lang","Langue"],["status","Statut"],["admin_notes","Notes internes"]]},
+ contact_messages:{title:"Message de contact",
+  cols:[["created_at","Date"],["guardian_name","Tuteur"],["student_name","Élève"],["massar_code","Massar"],["guardian_phone","Téléphone"],["email","E-mail"],["status","Statut"]],
+  all:[["created_at","Date"],["guardian_name","Nom du tuteur"],["student_name","Nom de l'élève"],["massar_code","Code Massar de l'élève"],["guardian_phone","Téléphone du tuteur"],["email","E-mail"],["message","Message"],["lang","Langue"],["status","Statut"]]}
+};
+const TBL={inscriptions:"lycee_inscriptions",contact_messages:"lycee_contact_messages"};
+let tab="inscriptions",rows=[],cur=null,busy=false;
+
+const fmt=(k,v)=>{if(v==null||v==="")return "—";if(k==="created_at")return new Date(v).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"});if(k==="status")return ST[tab][v]||v;return String(v)};
+const show=(el,t,cls)=>{el.textContent=t||"";el.className="msg"+(cls?" "+cls:"");el.hidden=!t};
+
+/* ---------- Connexion ---------- */
+async function checkAdmin(session){
+  const {data,error}=await sb.from("lycee_admins").select("user_id").eq("user_id",session.user.id).maybeSingle();
+  return !error&&!!data;
+}
+async function enter(session){
+  if(!(await checkAdmin(session))){await sb.auth.signOut();showLogin("Ce compte n'est pas autorisé à accéder à l'administration.");return}
+  $("lf").hidden=true;$("app").hidden=false;$("out").hidden=false;$("who").textContent=session.user.email;
+  setTab(tab);
+}
+function showLogin(msg){$("lf").hidden=false;$("app").hidden=true;$("out").hidden=true;$("who").textContent="";show($("lm"),msg,"err")}
+$("lf").addEventListener("submit",async e=>{
+  e.preventDefault();if(busy)return;busy=true;$("lb").disabled=true;show($("lm"),"");
+  const {data,error}=await sb.auth.signInWithPassword({email:$("em").value.trim(),password:$("pw").value});
+  busy=false;$("lb").disabled=false;
+  if(error||!data.session){show($("lm"),"E-mail ou mot de passe incorrect.","err");return}
+  $("pw").value="";await enter(data.session);
+});
+$("out").addEventListener("click",async()=>{await sb.auth.signOut();rows=[];showLogin("")});
+
+/* ---------- Données ---------- */
+async function load(){
+  show($("am"),"");$("tb").innerHTML="";$("cnt").textContent="Chargement…";
+  let all=[],from=0;const size=1000;
+  for(;;){
+    const {data,error}=await sb.from(TBL[tab]).select("*").order("created_at",{ascending:false}).range(from,from+size-1);
+    if(error){show($("am"),"Impossible de charger les données. Vérifiez votre connexion et vos droits d'accès.","err");$("cnt").textContent="";return}
+    all=all.concat(data);if(data.length<size)break;from+=size;
+  }
+  rows=all;render();
+}
+function filtered(){
+  const q=$("q").value.trim().toLowerCase(),st=$("fs").value,lv=$("fl").value;
+  return rows.filter(r=>(!st||r.status===st)&&(!lv||r.level===lv)&&(!q||Object.values(r).some(v=>v!=null&&String(v).toLowerCase().includes(q))));
+}
+function render(){
+  const c=CFG[tab],list=filtered();
+  const th=document.createElement("tr");c.cols.forEach(([,l])=>{const x=document.createElement("th");x.textContent=l;th.appendChild(x)});
+  $("th").replaceChildren(th);
+  const frag=document.createDocumentFragment();
+  list.forEach(r=>{
+    const tr=document.createElement("tr");tr.tabIndex=0;
+    c.cols.forEach(([k,l])=>{
+      const td=document.createElement("td");td.dataset.l=l;
+      if(k==="status"){const p=document.createElement("span");p.className="pill s-"+r.status;p.textContent=fmt(k,r[k]);td.appendChild(p)}else td.textContent=fmt(k,r[k]);
+      tr.appendChild(td)});
+    tr.addEventListener("click",()=>openRow(r));
+    tr.addEventListener("keydown",e=>{if(e.key==="Enter")openRow(r)});
+    frag.appendChild(tr)});
+  $("tb").replaceChildren(frag);
+  $("cnt").textContent=list.length+" / "+rows.length+" enregistrement(s)";
+  $("em0").hidden=list.length>0;
+}
+function setTab(t){
+  tab=t;document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
+  $("fs").innerHTML='<option value="">Tous les statuts</option>'+Object.entries(ST[t]).map(([k,v])=>`<option value="${k}">${v}</option>`).join("");
+  $("fl").hidden=t!=="inscriptions";$("q").value="";load();
+}
+document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>setTab(b.dataset.t)));
+["q","fs","fl"].forEach(id=>$(id).addEventListener("input",render));
+$("rf").addEventListener("click",load);
+
+/* ---------- Détails / modification / suppression ---------- */
+function openRow(r){
+  cur=r;$("dt").textContent=CFG[tab].title;show($("dm"),"");
+  const dl=$("dd");dl.replaceChildren();
+  CFG[tab].all.forEach(([k,l])=>{if(k==="admin_notes")return;const dt=document.createElement("dt"),dd=document.createElement("dd");dt.textContent=l;dd.textContent=fmt(k,r[k]);dl.append(dt,dd)});
+  $("dst").innerHTML=Object.entries(ST[tab]).map(([k,v])=>`<option value="${k}">${v}</option>`).join("");$("dst").value=r.status;
+  $("nw").hidden=tab!=="inscriptions";$("dnote").value=r.admin_notes||"";
+  $("dlg").showModal();
+}
+$("dx").addEventListener("click",()=>$("dlg").close());
+$("ds").addEventListener("click",async()=>{
+  if(busy||!cur)return;busy=true;$("ds").disabled=true;
+  const patch={status:$("dst").value};if(tab==="inscriptions")patch.admin_notes=$("dnote").value.trim()||null;
+  const {data,error}=await sb.from(TBL[tab]).update(patch).eq("id",cur.id).select();
+  busy=false;$("ds").disabled=false;
+  if(error||!data||!data.length){show($("dm"),"Modification refusée ou échouée. Rien n'a été enregistré.","err");return}
+  Object.assign(cur,data[0]);show($("dm"),"Modifications enregistrées.","ok");render();
+});
+$("dd2").addEventListener("click",async()=>{
+  if(busy||!cur)return;
+  if(!confirm("Supprimer définitivement cet enregistrement ? Cette action est irréversible."))return;
+  busy=true;$("dd2").disabled=true;
+  const {data,error}=await sb.from(TBL[tab]).delete().eq("id",cur.id).select("id");
+  busy=false;$("dd2").disabled=false;
+  if(error||!data||!data.length){show($("dm"),"Suppression refusée ou échouée. Rien n'a été supprimé.","err");return}
+  rows=rows.filter(r=>r.id!==cur.id);cur=null;$("dlg").close();render();
+});
+
+/* ---------- Export Excel (lignes filtrées) ---------- */
+$("ex").addEventListener("click",()=>{
+  const list=filtered();if(!list.length){show($("am"),"Rien à exporter.","err");return}
+  const c=CFG[tab],out=list.map(r=>Object.fromEntries(c.all.map(([k,l])=>[l,k==="created_at"?fmt(k,r[k]):(k==="status"?fmt(k,r[k]):(r[k]??""))])));
+  // neutralise les formules Excel éventuelles dans les données saisies par le public
+  out.forEach(o=>{for(const k in o){if(typeof o[k]==="string"&&/^[=+\-@]/.test(o[k]))o[k]="'"+o[k]}});
+  const ws=XLSX.utils.json_to_sheet(out);ws["!cols"]=c.all.map(()=>({wch:22}));
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,tab==="inscriptions"?"Inscriptions":"Messages");
+  XLSX.writeFile(wb,(tab==="inscriptions"?"inscriptions_":"messages_")+new Date().toISOString().slice(0,10)+".xlsx");
+});
+
+/* ---------- Démarrage : session existante ? ---------- */
+sb.auth.getSession().then(({data})=>{if(data.session)enter(data.session)});
+</script>
+</body>
+</html>
